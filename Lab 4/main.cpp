@@ -12,6 +12,7 @@
 #include <time.h>
 #include <stack>
 #include <algorithm>
+#include <unistd.h>
 
 
 int myrandom (int i)
@@ -26,8 +27,9 @@ struct Block{
     bool left_wall;
     bool right_wall;
     char display = '*';
-    static const char WALL = '*';
+    static const char WALL = '#';
     static const char PATH = ' ';
+    static const char GO = '!';
     static const char S = 'S';
     static  const char F = 'F';
     static const char START = '+';
@@ -41,7 +43,7 @@ struct labyrinth {
     }
     
 
-    #define SIZE 15
+    #define SIZE 19
     std::vector <std::vector<Block>> maze;
 
 };
@@ -59,7 +61,7 @@ void print(labyrinth level)
 
 
 
-void Drill(std::stack<std::pair<int,int>>&back_track,std::stack<std::pair<int,int>>&cur_pos, labyrinth &level,Block, int &visitedCells)
+void Drill(std::stack<std::pair<int,int>>&back_track,std::stack<std::pair<int,int>>&cur_pos, labyrinth &level,Block)
 {
 
         level.maze[back_track.top().first][back_track.top().second].display = Block::PATH;
@@ -67,19 +69,27 @@ void Drill(std::stack<std::pair<int,int>>&back_track,std::stack<std::pair<int,in
         level.maze[back_track.top().first][back_track.top().second].bot_wall = false;
         
         back_track.push(std::make_pair(back_track.top().first,back_track.top().second));
-        
     
-        level.maze[back_track.top().first][back_track.top().second].visited = true;
-        level.maze[back_track.top().first][back_track.top().second].display = Block::PATH;
-        level.maze[back_track.top().first][back_track.top().second].top_wall = false;
-        visitedCells++;
         cur_pos = back_track;
+    
+}
+void Finish(std::stack<std::pair<int,int>>&solve_track,std::stack<std::pair<int,int>>&solve_pos, labyrinth &level,Block)
+{
+
+    level.maze[solve_track.top().first][solve_track.top().second].display = Block::F;
+    level.maze[solve_track.top().first][solve_track.top().second].visited = true;
+    
+    solve_track.push(std::make_pair(solve_track.top().first,solve_track.top().second));
+    
+    solve_pos = solve_track;
     
 }
 
 
+
 int main() {
-    
+    for(int i = 0; i < 2; i++)
+    {
     Block block;
     labyrinth level(SIZE, SIZE);
 //    Bygg maze
@@ -103,24 +113,26 @@ int main() {
         }
     
     
-    int visitedCells = 1;
-    int totalCells = ((SIZE-1))*((SIZE-1));
-    std::stack<std::pair<int, int>> back_track;                                  // Stack is used to trace the reverse path
+
+    std::stack<std::pair<int, int>> back_track;
+    std::stack<std::pair<int, int>> solve_track;
     
     level.maze[1][0].display = block.S;
     level.maze[1][1].display = block.START;
     // sätt S som startplats
     back_track.push(std::make_pair(1,1));
     std::stack<std::pair<int, int>> cur_pos = back_track;
+    std::stack<std::pair<int, int>> solv_pos = solve_track;
     level.maze[back_track.top().first][back_track.top().second].visited = true;  // Sätt Start som besökt
     srand(unsigned(time(NULL)));
-//    std::cin.get();
-    
-    while (!(back_track.empty())) {
         auto offset = [&](int y, int x)
         {
             return std::make_pair(back_track.top().first + y , (back_track.top().second + x));
         };
+
+//    std::cin.get();
+    
+    while (!(back_track.empty())) {
         std::vector<std::pair<int ,int>> neighbors;
         
 
@@ -137,7 +149,7 @@ int main() {
             
         auto west = offset(0,-1);
             if(back_track.top().second > 1 && level.maze[west.first][west.second].visited == false)
-                  if(back_track.top().first > 1 && level.maze[west.first][west.second-1].visited == false && level.maze[west.first-1][west.second].visited == false && level.maze[west.first-1][west.second].visited == false)
+                  if(back_track.top().first > 1 && level.maze[west.first][west.second-1].visited == false && level.maze[west.first+1][west.second].visited == false && level.maze[west.first-1][west.second].visited == false)
                 neighbors.push_back(std::make_pair(west.first,west.second));
         
 
@@ -150,11 +162,21 @@ int main() {
         if(neighbors.empty())
         {
             
-            
-            std::cout << " Popade \7" << std::endl;
+            //std::cout << " " << std::endl;
+            //std::cout << " Popade " << back_track.size() << std::endl;
+            if(solve_track.size() < back_track.size())
+                solve_track = back_track;
             back_track.pop();
+            if(back_track.empty()) break;
+            if (level.maze[back_track.top().first][back_track.top().second].visited == false)
+            {
+                if(back_track.empty()) break;
+                back_track.pop();
+                
+            }
             
-            //        std::cin.get();
+            
+        
         }
         std::random_shuffle(neighbors.begin(), neighbors.end(), myrandom);
         
@@ -169,8 +191,8 @@ int main() {
         
         if(back_track.empty()) break;
         
-        std::cout << cur_pos.top().first << "," << cur_pos.top().second << std::endl;
-        std:: cout << back_track.top().first <<"," << back_track.top().second << std::endl;
+        //std::cout << cur_pos.top().first << "," << cur_pos.top().second << std::endl;
+        //std:: cout << back_track.top().first <<"," << back_track.top().second << std::endl;
         
         
         
@@ -178,33 +200,41 @@ int main() {
         
         if(back_track.top().first > cur_pos.top().first && back_track.top().second == cur_pos.top().second)
         {
-            Drill(back_track, cur_pos, level, block, visitedCells);
+            Drill(back_track, cur_pos, level, block);
         
         }
         if(back_track.top().first == cur_pos.top().first && back_track.top().second > cur_pos.top().second)
         {
-            Drill(back_track, cur_pos, level, block, visitedCells);
+            Drill(back_track, cur_pos, level, block);
         }
         
         if(back_track.top().first < cur_pos.top().first && back_track.top().second == cur_pos.top().second)
         {
-            Drill(back_track, cur_pos, level, block, visitedCells);
+            Drill(back_track, cur_pos, level, block);
         }
         if(back_track.top().first == cur_pos.top().first && back_track.top().second < cur_pos.top().second)
         {
-            Drill(back_track, cur_pos, level, block, visitedCells);
+            Drill(back_track, cur_pos, level, block);
         }
-    
-        print(level);
-    }
-
-    
         
+        
+    }
+        if (level.maze[solve_track.top().first][solve_track.top().second].visited == true)
+        {
+            
+            Finish(solve_track, cur_pos, level, block);
+            
+            
+        }
+    print(level);
 
+    
     
 
 
+    
+    
 
-
+    }
      return 0;
 }
