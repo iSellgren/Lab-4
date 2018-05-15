@@ -16,6 +16,8 @@ int main() {
         level.Generate();
         level.Solve_Maze();
         
+        
+        
 		
         std::cout << i << std::endl;
 	}
