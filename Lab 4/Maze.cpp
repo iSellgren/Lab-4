@@ -1,4 +1,5 @@
 #include "Maze.h"
+
 int myrandom(int i)
 {
 	return std::rand() % i;
@@ -13,15 +14,13 @@ void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::stack<st
 {
 	maze[back_track.top().first][back_track.top().second].display = Block::PATH;
 	maze[back_track.top().first][back_track.top().second].visited = true;
-	maze[back_track.top().first][back_track.top().second].display = Block::PATH;
-	maze[back_track.top().first][back_track.top().second].visited = true;
-	maze[back_track.top().first][back_track.top().second].bot_wall = false;
+
 
 	back_track.push(std::make_pair(back_track.top().first, back_track.top().second));
 
 	cur_pos = back_track;
 }
-void labyrinth::Finish(std::stack<std::pair<int, int>>&finish_pos, std::stack<std::pair<int, int>>&solve_pos)
+void labyrinth::Finish(std::stack<std::pair<int, int>>&finish_pos)
 {
 
 	maze[finish_pos.top().first][finish_pos.top().second].display = Block::F;
@@ -29,25 +28,19 @@ void labyrinth::Finish(std::stack<std::pair<int, int>>&finish_pos, std::stack<st
 
 	finish_pos.push(std::make_pair(finish_pos.top().first, finish_pos.top().second));
 
-	finish_pos = finish_pos;
 
 }
-void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<std::pair<int, int>>&solve_pos)
+void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track)
 {
 
 
-	maze[solve_pos.top().first][solve_pos.top().second].display = Block::START;
-	maze[solve_pos.top().first][solve_pos.top().second].visited = true;
-	if (maze[solve_track.top().first][solve_track.top().second].display == Block::START)
-	{
-		maze[solve_pos.top().first][solve_pos.top().second].display = Block::S;
-
-	}
+	maze[solve_track.top().first][solve_track.top().second].display = Block::START;
+	maze[solve_track.top().first][solve_track.top().second].visited = true;
+ 
 
 
 
 	solve_track.push(std::make_pair(solve_track.top().first, solve_track.top().second));
-	solve_pos = solve_track;
 
 }
 
@@ -89,14 +82,13 @@ void labyrinth::Generate()
 
 	std::stack<std::pair<int, int>> back_track;
 	std::stack<std::pair<int, int>> finish_pos;
-	std::stack<std::pair<int, int>> finish_track;
+
 	
 
 	maze[1][0].display = Block::S;
 
 	// sätt S som startplats
 	back_track.push(std::make_pair(1, 1));
-	finish_track.push(std::make_pair(1, 1));
 	std::stack<std::pair<int, int>> cur_pos = back_track;
 
 
@@ -174,9 +166,6 @@ void labyrinth::Generate()
 
 
 
-		print();
-		std::cin.get();
-
 		if (back_track.top().first > cur_pos.top().first && back_track.top().second == cur_pos.top().second)
 		{
 			Drill(back_track, cur_pos);
@@ -203,7 +192,7 @@ void labyrinth::Generate()
 	if (maze[finish_pos.top().first][finish_pos.top().second].visited == true)
 	{
 
-		Finish(finish_pos, cur_pos);
+		Finish(finish_pos);
 		maze[1][1].display = Block::START;
 	}
 }
@@ -212,7 +201,6 @@ void labyrinth::Solve_Maze()
 	
 	std::stack<std::pair<int, int>> solve_track;
 	solve_track.push(std::make_pair(1, 1));
-	std::stack<std::pair<int, int>> solve_pos = solve_track;
 	auto solve_neib = [&](int y, int x)
 	{
 		return std::make_pair(solve_track.top().first + y, (solve_track.top().second + x));
@@ -227,6 +215,7 @@ void labyrinth::Solve_Maze()
 			solve_neighbors.push_back(std::make_pair(north.first, north.second));
 		if (solve_track.top().first > 0 && maze[north.first][north.second].display == Block::F)
 		{
+            std::cout << "DONE"<< std::endl;
 			maze[north.first + 1][north.second].display = Block::START;
 			break;
 		}
@@ -237,6 +226,7 @@ void labyrinth::Solve_Maze()
 			solve_neighbors.push_back(std::make_pair(east.first, east.second));
 		if (solve_track.top().second < maze.size() && maze[east.first][east.second].display == Block::F)
 		{
+            std::cout << "DONE"<< std::endl;
 			maze[east.first][east.second - 1].display = Block::START;
 			break;
 		}
@@ -250,6 +240,7 @@ void labyrinth::Solve_Maze()
 		if (solve_track.top().second > 0 && maze[west.first][west.second].display == Block::F)
 		{
 			maze[west.first][west.second + 1].display = Block::START;
+            std::cout << "DONE"<< std::endl;
 			break;
 		}
 
@@ -261,6 +252,7 @@ void labyrinth::Solve_Maze()
 		if (solve_track.top().first < maze.size() && maze[south.first][south.second].display == Block::F)
 		{
 			maze[south.first - 1][south.second].display = Block::START;
+            std::cout << "DONE"<< std::endl;
 			break;
 		}
 
@@ -271,10 +263,10 @@ void labyrinth::Solve_Maze()
 		{
 
 			solve_track.pop();
-			if (maze[solve_pos.top().first][solve_pos.top().second].visited == true)
+			if (maze[solve_track.top().first][solve_track.top().second].visited == true)
 			{
 				solve_track.pop();
-				solve_pos.pop();
+				
 				if (solve_track.empty())
 					return;
 
@@ -300,32 +292,9 @@ void labyrinth::Solve_Maze()
 		if (solve_track.empty())
 			return;
 
-		if (solve_track.top().first > solve_pos.top().first && solve_track.top().second == solve_pos.top().second)
-		{
-			Solve(solve_track, solve_pos);
 
-		}
-
-
-		if (solve_track.top().first == solve_pos.top().first && solve_track.top().second > solve_pos.top().second)
-		{
-
-			Solve(solve_track, solve_pos);
-
-		}
-
-		if (solve_track.top().first < solve_pos.top().first && solve_track.top().second == solve_pos.top().second)
-		{
-
-			Solve(solve_track, solve_pos);
-
-		}
-		if (solve_track.top().first == solve_pos.top().first && solve_track.top().second < solve_pos.top().second)
-		{
-
-			Solve(solve_track, solve_pos);
-
-		}
+        Solve(solve_track);
 
 	}
+
 }

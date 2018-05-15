@@ -32,8 +32,8 @@ struct labyrinth {
 private:
 	std::stack<std::pair<int, int>> back_track;
 	void Drill(std::stack<std::pair<int, int>>&back_track, std::stack<std::pair<int, int>>&cur_pos);
-	void Finish(std::stack<std::pair<int, int>>&finish_pos, std::stack<std::pair<int, int>>&solve_pos);
-	void Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<std::pair<int, int>>&solve_pos);
+	void Finish(std::stack<std::pair<int, int>>&finish_pos);
+	void Solve(std::stack<std::pair<int, int>>&solve_track);
 #define SIZE 14
 
 	std::vector <std::vector<Block>> maze;
