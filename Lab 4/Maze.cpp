@@ -12,7 +12,7 @@ labyrinth::labyrinth(int height, int width)
 }
 
 // Ta ner väggar för att fixa vägar
-void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::stack<std::pair<int, int>>& cur_pos)
+void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::pair<int, int>& cur_pos)
 {
 	maze[back_track.top().first][back_track.top().second].display = Block::PATH;
 	maze[back_track.top().first][back_track.top().second].visited = true;
@@ -20,11 +20,11 @@ void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::stack<st
 
 	back_track.push(std::make_pair(back_track.top().first, back_track.top().second));
 
-	cur_pos = back_track;
+	cur_pos = back_track.top();
 }
 
 //Sättar Målgången
-void labyrinth::Finish(std::stack<std::pair<int, int>>&finish_pos, std::stack<std::pair<int, int>>&solve_pos)
+void labyrinth::Finish(std::stack<std::pair<int, int>>&finish_pos)
 {
 
 	maze[finish_pos.top().first][finish_pos.top().second].display = Block::F;
@@ -32,7 +32,6 @@ void labyrinth::Finish(std::stack<std::pair<int, int>>&finish_pos, std::stack<st
 
 	finish_pos.push(std::make_pair(finish_pos.top().first, finish_pos.top().second));
 
-	finish_pos = finish_pos;
 
 }
 //Sätter löser labyrinten
@@ -119,15 +118,14 @@ void labyrinth::Generate()
 	//Skapar stackar för hålla koll på vars man varit och målet
 	std::stack<std::pair<int, int>> back_track;
 	std::stack<std::pair<int, int>> finish_pos;
-	std::stack<std::pair<int, int>> finish_track;
+	
 	
 
 
 	// sätt 1,1 som startplats
 	back_track.push(std::make_pair(1, 1));
-	finish_track.push(std::make_pair(1, 1));
 	// detta för att kunna veta vart man ska gå
-	std::stack<std::pair<int, int>> cur_pos = back_track;
+	std::pair<int, int> cur_pos = back_track.top();
 
 
 	maze[back_track.top().first][back_track.top().second].visited = true;  // Sätt Start som besökt
@@ -219,24 +217,24 @@ void labyrinth::Generate()
 
 
 			//Gör en väg norrut
-		if (back_track.top().first > cur_pos.top().first && back_track.top().second == cur_pos.top().second)
+		if (back_track.top().first > cur_pos.first && back_track.top().second == cur_pos.second)
 		{
 			Drill(back_track, cur_pos);
 
 
 		}
 			//Gör en väg öster
-		if (back_track.top().first == cur_pos.top().first && back_track.top().second > cur_pos.top().second)
+		if (back_track.top().first == cur_pos.first && back_track.top().second > cur_pos.second)
 		{
 			Drill(back_track, cur_pos);
 		}
 			//Gör en väg söderut
-		if (back_track.top().first < cur_pos.top().first && back_track.top().second == cur_pos.top().second)
+		if (back_track.top().first < cur_pos.first && back_track.top().second == cur_pos.second)
 		{
 			Drill(back_track, cur_pos);
 		}
 //            Gör en väg väster
-		if (back_track.top().first == cur_pos.top().first && back_track.top().second < cur_pos.top().second)
+		if (back_track.top().first == cur_pos.first && back_track.top().second < cur_pos.second)
 		{
 			Drill(back_track, cur_pos);
 		}
@@ -248,7 +246,7 @@ void labyrinth::Generate()
 	if (maze[finish_pos.top().first][finish_pos.top().second].visited == true)
 	{
 
-		Finish(finish_pos, cur_pos);
+		Finish(finish_pos);
 		maze[1][1].display = Block::START;
 	}
     clock_t stop = clock();

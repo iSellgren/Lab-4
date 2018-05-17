@@ -10,21 +10,14 @@
 
 
 int main() {
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10000000; i++)
 	{
 
   
 		labyrinth level(SIZE, SIZE);
         	level.Generate();
-        level.print();
-        std::cin.get();
-        usleep(1000000);
         	level.Solve_Maze();
-        usleep(1000000);
-        level.print();
-        level.print_perfect();
-        usleep(1000000);
-
+        usleep(100);
         
 		
         std::cout << i << std::endl;
