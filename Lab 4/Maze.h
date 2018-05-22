@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <string>
 #include <cstdlib>
+#include <fstream>
 struct Block {
 
 	bool visited = false;
@@ -30,7 +31,9 @@ struct labyrinth {
 	void Generate();
 	void Solve_Maze();
 	void print();
-    	void print_perfect();
+    void export_maze();
+    void print_perfect();
+    void import_maze();
 
 private:
 	std::stack<std::pair<int, int>> back_track;

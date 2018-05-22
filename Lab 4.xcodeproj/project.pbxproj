@@ -26,6 +26,7 @@
 /* Begin PBXFileReference section */
 		B50366F720A03E6B00F1C136 /* Lab 4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Lab 4"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B50366FA20A03E6B00F1C136 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		B5279CC520B459B6000B401E /* maze.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = maze.txt; sourceTree = "<group>"; };
 		B544A84F20A49ED5007B5FAF /* Lab 4 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Lab 4"; sourceTree = "<group>"; };
 		B56CDCC720AB023300B2B45C /* Maze.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Maze.cpp; sourceTree = "<group>"; };
 		B56CDCC920AB023500B2B45C /* Maze.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Maze.h; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 				B56CDCC920AB023500B2B45C /* Maze.h */,
 				B56CDCC720AB023300B2B45C /* Maze.cpp */,
 				B50366FA20A03E6B00F1C136 /* main.cpp */,
+				B5279CC520B459B6000B401E /* maze.txt */,
 			);
 			path = "Lab 4";
 			sourceTree = "<group>";

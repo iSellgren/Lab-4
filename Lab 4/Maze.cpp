@@ -56,24 +56,40 @@ void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<st
 // Skriver ut vägen som algoritmen tagit
 void labyrinth::print()
 {
+
     
 	for (auto i = 0; i < SIZE; i++)
 	{
 		std::cout << std::endl;
 		for (auto j = 0; j < SIZE; j++)
         {
-            if(maze[i][j].display == Block::X)
-                maze[i][j].display = Block::X;
             maze[1][0].display = Block::S;
 			std::cout << maze[i][j].display;
 			
         }
-            
-
 	}
-    
 
 }
+void labyrinth::export_maze()
+{
+    std::ofstream myfile;
+    myfile.open("maze.txt");
+    
+    for (auto i = 0; i < SIZE; i++)
+    {
+        for (auto j = 0; j < SIZE; j++)
+        {
+            maze[1][0].display = Block::S;
+            myfile << maze[i][j].display;
+            
+        }
+        myfile << std::endl;;
+    }
+    myfile.close();
+    std::cout << "Maze completely exported to maze.txt" << std::endl;
+    
+}
+
 // Skriver bara ut den korrekta vägen till målet
 void labyrinth::print_perfect()
 {
@@ -92,6 +108,46 @@ void labyrinth::print_perfect()
         
     }
     
+}
+void labyrinth::import_maze()
+{
+    maze.clear();
+    char chars;
+    int size = 0;
+    std::ifstream file("maze.txt");
+    if(file.is_open())
+    {
+        std::vector<Block> row;
+        
+        while (!file.eof())
+        {
+            
+            chars = file.get();
+            if(chars == Block::PATH)
+            {
+                Block Path;
+                Path.display = Block::PATH;
+                row.push_back(Path);
+                
+        
+            }else if(chars == '\n')
+            {
+                SIZE = size-1;
+                maze.push_back(row);
+                row.clear();
+                size = 0;
+            }else
+            {
+                Block block;
+                block.display = chars;
+                row.push_back(block);
+            }
+            size++;
+        }
+
+        file.close();
+    }
+    else std::cerr << "Cant open file ";
 }
 void labyrinth::Generate()
 {
@@ -251,6 +307,8 @@ void labyrinth::Generate()
 		Finish(finish_pos);
 		maze[1][1].display = Block::START;
 	}
+
+    
     clock_t stop = clock();
     double elapsed = (double)(stop - start) / CLOCKS_PER_SEC;
     printf("Time it took to build maze in sec: %f", elapsed);
