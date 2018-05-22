@@ -34,6 +34,7 @@ struct labyrinth {
     void export_maze();
     void print_perfect();
     void import_maze();
+    
 
 private:
 	std::stack<std::pair<int, int>> back_track;

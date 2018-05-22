@@ -86,6 +86,7 @@ void labyrinth::export_maze()
         myfile << std::endl;;
     }
     myfile.close();
+    
     std::cout << "Maze completely exported to maze.txt" << std::endl;
     
 }

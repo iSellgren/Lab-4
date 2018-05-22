@@ -18,7 +18,9 @@ int main(int argc, char** argv) {
         int SIZE = atoi(argv[2]);
             labyrinth level(SIZE, SIZE);
             level.Generate();
-            level.export_maze();
+//            level.export_maze();
+            
+        
     
         }else
             std::cerr << "Maze size is to small" << std::endl;
