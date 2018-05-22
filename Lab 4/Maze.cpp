@@ -68,6 +68,7 @@ void labyrinth::print()
 			
         }
 	}
+    
 
 }
 void labyrinth::export_maze()
