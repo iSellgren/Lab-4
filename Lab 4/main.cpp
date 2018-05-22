@@ -9,16 +9,22 @@
 
 
 
-int main() {
-	for (int i = 0; i < 1000000; i++)
-	{
+int main(int argc, char** argv) {
+    if(atoi(argv[2]) > 4)
+    {
+    int SIZE = atoi(argv[2]);
+
+  
 		labyrinth level(SIZE, SIZE);
         level.Generate();
-        level.Solve_Maze();
+		level.Solve_Maze();
+        system("CLEAR");
+        level.print_perfect();
         
-		
-        std::cout << i << std::endl;
-	}
+        
+			
 
 	return 0;
+    }else
+        std::cerr << "Maze size is to small" << std::endl;
 }
