@@ -31,9 +31,9 @@ struct labyrinth {
 	void Generate();
 	void Solve_Maze();
 	void print();
-    void export_maze();
+    void export_maze(std::string(filename));
     void print_perfect();
-    void import_maze();
+    bool import_maze(std::string(a));
     
 
 private:

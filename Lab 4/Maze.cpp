@@ -71,10 +71,10 @@ void labyrinth::print()
     
 
 }
-void labyrinth::export_maze()
+void labyrinth::export_maze(std::string filename)
 {
     std::ofstream myfile;
-    myfile.open("maze.txt");
+    myfile.open(filename+".txt");
     
     for (auto i = 0; i < SIZE; i++)
     {
@@ -88,7 +88,7 @@ void labyrinth::export_maze()
     }
     myfile.close();
     
-    std::cout << "Maze completely exported to maze.txt" << std::endl;
+    std::cout << "Maze completely exported to" << filename+".txt" << std::endl;
     
 }
 
@@ -111,12 +111,15 @@ void labyrinth::print_perfect()
     }
     
 }
-void labyrinth::import_maze()
+bool labyrinth::import_maze(std::string(a))
 {
     maze.clear();
     char chars;
     int size = 0;
-    std::ifstream file("maze.txt");
+    std::ifstream file(a);
+    
+    if(file)
+    {
     if(file.is_open())
     {
         std::vector<Block> row;
@@ -148,8 +151,9 @@ void labyrinth::import_maze()
         }
 
         file.close();
+        return true;
     }
-    else std::cerr << "Cant open file ";
+    }return false;
 }
 void labyrinth::Generate()
 {
