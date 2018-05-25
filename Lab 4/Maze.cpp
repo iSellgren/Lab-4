@@ -63,20 +63,18 @@ void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<st
 // Skriver ut vad mazen
 void labyrinth::print()
 {
-
+    std::string test = "";
     
 	for (auto i = 0; i < SIZE; i++)
 	{
-		std::cout << std::endl;
 		for (auto j = 0; j < SIZE; j++)
         {
-            maze[1][0].display = Block::S;
-			std::cout << maze[i][j].display;
-			
+            
+			test += maze[i][j].display;
         }
+        test += '\n';
 	}
-    
-
+    std::cout << test;
 }
 
 // exporterar mazen till angivet filnamn.txt
@@ -106,21 +104,20 @@ void labyrinth::export_maze(std::string filename)
 // Skriver bara ut den korrekta vägen till målet
 void labyrinth::print_perfect()
 {
+    std::string test1 = "";
     
     for (auto i = 0; i < SIZE; i++)
     {
-        std::cout << std::endl;
         for (auto j = 0; j < SIZE; j++)
         {
             if(maze[i][j].display == Block::W)
                 maze[i][j].display = Block::PATH;
             maze[1][0].display = Block::S;
-            std::cout << maze[i][j].display;
+            test1 += maze[i][j].display;
         }
-        
-        
+        test1 += '\n';
     }
-    
+    std::cout << test1;
 }
 
 //importerar en maze.
@@ -314,6 +311,7 @@ void labyrinth::Generate()
 
 		Finish(finish_pos);
 		maze[1][1].display = Block::START;
+        maze[1][0].display = Block::S;
 	}
 
     

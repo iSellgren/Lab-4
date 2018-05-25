@@ -12,14 +12,14 @@
 int main(int argc, char** argv) {
     std::string input = "";
     std::string filename ="";
-    for(int i = 0; i <100000; i++)
+    for(int i = 0; i <1000000; i++)
     {
-        system("clear");
-        labyrinth level(9999, 9999);
+        labyrinth level(21, 21);
         level.Generate();
         level.Solve_Maze();
-        std::cin.get();
+        level.print_perfect();
     }
+    return 0;
     
     
     if(std::string(argv[1]) == "-size")
