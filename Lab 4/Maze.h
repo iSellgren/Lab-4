@@ -1,3 +1,10 @@
+//
+//  Maze.h
+//  Lab 4
+//
+//  Created by Fredrik Sellgren on 2018-05-07.
+//  Copyright � 2018 Fredrik Sellgren. All rights reserved.
+//
 #pragma once
 #include <iostream>
 #include <vector>
@@ -8,19 +15,16 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
+#include <unistd.h>
 struct Block {
 
 	bool visited = false;
-	bool top_wall;
-	bool bot_wall;
-	bool left_wall;
-	bool right_wall;
 	char display = '*';
 	static const char WALL = '#';
 	static const char PATH = ' ';
 	static const char S = 'S';
-    static const char X = 'x';
-	static  const char F = 'F';
+    static const char W = 'x';
+	static  const char F = 'X';
 	static const char START = '+';
 };
 
@@ -38,7 +42,7 @@ struct labyrinth {
 
 private:
 	std::stack<std::pair<int, int>> back_track;
-	void Drill(std::stack<std::pair<int, int>>&back_track, std::pair<int, int>&cur_pos);
+    void Drill(std::stack<std::pair<int, int>>&back_track, std::pair<int, int>&current_position);
 	void Finish(std::pair<int, int>&finish_pos);
 	void Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<std::pair<int, int>>&solve_pos);
 

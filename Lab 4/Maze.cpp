@@ -1,3 +1,10 @@
+//
+//  main.cpp
+//  Lab 4
+//
+//  Created by Fredrik Sellgren on 2018-05-07.
+//  Copyright 2018 Fredrik Sellgren. All rights reserved.
+//
 #include "Maze.h"
 
 int myrandom(int i)
@@ -13,8 +20,8 @@ labyrinth::labyrinth(int height, int width)
 	maze = std::vector <std::vector<Block> >(height, std::vector<Block>(width, Block()));
 }
 
-// Ta ner väggar för att fixa vägar
-void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::pair<int, int>& cur_pos)
+// Ta ner vaggar for att fixa gangar
+void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::pair<int, int>& current_position)
 {
 	maze[back_track.top().first][back_track.top().second].display = Block::PATH;
 	maze[back_track.top().first][back_track.top().second].visited = true;
@@ -22,20 +29,20 @@ void labyrinth::Drill(std::stack<std::pair<int, int>>& back_track, std::pair<int
 
 	back_track.push(std::make_pair(back_track.top().first, back_track.top().second));
 
-	cur_pos = back_track.top();
+	current_position = back_track.top();
 }
 
-//Sättar Målgången
+//Satter Malgangen
 void labyrinth::Finish(std::pair<int, int>&finish_pos)
 {
 
-	maze[finish_pos.first][finish_pos.second].display = Block::F;
+	maze[finish_pos.first][finish_pos.second+1].display = Block::F;
 	maze[finish_pos.first][finish_pos.second].visited = true;
 
 
 
 }
-//Sätter löser labyrinten
+//Lšser labyrinten
 void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<std::pair<int, int>>&solve_pos)
 {
 
@@ -44,7 +51,7 @@ void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<st
     maze[solve_track.top().first][solve_track.top().second].visited = true;
         if (maze[solve_pos.top().first][solve_pos.top().second].display == Block::START)
            {
-                    maze[solve_track.top().first][solve_track.top().second].display = Block::X;
+                    maze[solve_track.top().first][solve_track.top().second].display = Block::W;
             
             }
         solve_track.push(std::make_pair(solve_track.top().first, solve_track.top().second));
@@ -53,7 +60,7 @@ void labyrinth::Solve(std::stack<std::pair<int, int>>&solve_track, std::stack<st
 
 }
 
-// Skriver ut vägen som algoritmen tagit
+// Skriver ut vad mazen
 void labyrinth::print()
 {
 
@@ -71,9 +78,13 @@ void labyrinth::print()
     
 
 }
+
+// exporterar mazen till angivet filnamn.txt
 void labyrinth::export_maze(std::string filename)
 {
+    
     std::ofstream myfile;
+    // šppnar en .txt fil med filnamet anvŠdaren uppgivit
     myfile.open(filename+".txt");
     
     for (auto i = 0; i < SIZE; i++)
@@ -88,7 +99,7 @@ void labyrinth::export_maze(std::string filename)
     }
     myfile.close();
     
-    std::cout << "Maze completely exported to" << filename+".txt" << std::endl;
+    std::cout << "Maze completely exported to " << filename+".txt" << std::endl;
     
 }
 
@@ -101,7 +112,7 @@ void labyrinth::print_perfect()
         std::cout << std::endl;
         for (auto j = 0; j < SIZE; j++)
         {
-            if(maze[i][j].display == Block::X)
+            if(maze[i][j].display == Block::W)
                 maze[i][j].display = Block::PATH;
             maze[1][0].display = Block::S;
             std::cout << maze[i][j].display;
@@ -111,8 +122,11 @@ void labyrinth::print_perfect()
     }
     
 }
+
+//importerar en maze.
 bool labyrinth::import_maze(std::string(a))
 {
+    
     maze.clear();
     char chars;
     int size = 0;
@@ -120,39 +134,39 @@ bool labyrinth::import_maze(std::string(a))
     
     if(file)
     {
-    if(file.is_open())
-    {
-        std::vector<Block> row;
-        
-        while (!file.eof())
+        if(file.is_open())
         {
+            std::vector<Block> row;
             
-            chars = file.get();
-            if(chars == Block::PATH)
+            while (!file.eof())
             {
-                Block Path;
-                Path.display = Block::PATH;
-                row.push_back(Path);
                 
-        
-            }else if(chars == '\n')
-            {
-                SIZE = size-1;
-                maze.push_back(row);
-                row.clear();
-                size = 0;
-            }else
-            {
-                Block block;
-                block.display = chars;
-                row.push_back(block);
+                chars = file.get();
+                if(chars == Block::PATH)
+                {
+                    Block Path;
+                    Path.display = Block::PATH;
+                    row.push_back(Path);
+                    
+            
+                }else if(chars == '\n')
+                {
+                    SIZE = size-1;
+                    maze.push_back(row);
+                    row.clear();
+                    size = 0;
+                }else
+                {
+                    Block block;
+                    block.display = chars;
+                    row.push_back(block);
+                }
+                size++;
             }
-            size++;
-        }
 
-        file.close();
-        return true;
-    }
+            file.close();
+            return true;
+        }
     }return false;
 }
 void labyrinth::Generate()
@@ -163,20 +177,10 @@ void labyrinth::Generate()
 		for (int j = 0; j < SIZE; j++) {
 			maze[i][j].display = Block::WALL;
 			maze[i][j].visited = false;
-			maze[i][j].top_wall = true;
-			maze[i][j].bot_wall = true;
-			maze[i][j].left_wall = true;
-			maze[i][j].right_wall = true;
+
 		}
 	}
-	for (int i = 1; i < SIZE - 1; i++) {
-		for (int j = 1; j < SIZE - 1; j++) {
-			maze[0][j].top_wall = false;
-			maze[SIZE - 2][j].bot_wall = false;
-			maze[i][0].left_wall = false;
-			maze[i][SIZE - 2].right_wall = false;
-		}
-	}
+
 
 
 	//Skapar stackar för hålla koll på vars man varit och målet
@@ -189,7 +193,7 @@ void labyrinth::Generate()
 	// sätt 1,1 som startplats
 	back_track.push(std::make_pair(1, 1));
 	// detta för att kunna veta vart man ska gå
-	std::pair<int, int> cur_pos = back_track.top();
+	std::pair<int, int> current_position = back_track.top();
 
 
 	maze[back_track.top().first][back_track.top().second].visited = true;  // Sätt Start som besökt
@@ -281,29 +285,27 @@ void labyrinth::Generate()
 
 
 			//Gör en väg norrut
-		if (back_track.top().first > cur_pos.first && back_track.top().second == cur_pos.second)
+		if (back_track.top().first > current_position.first && back_track.top().second == current_position.second)
 		{
-			Drill(back_track, cur_pos);
+			Drill(back_track, current_position);
 
 
 		}
 			//Gör en väg öster
-		if (back_track.top().first == cur_pos.first && back_track.top().second > cur_pos.second)
+		if (back_track.top().first == current_position.first && back_track.top().second > current_position.second)
 		{
-			Drill(back_track, cur_pos);
+			Drill(back_track, current_position);
 		}
 			//Gör en väg söderut
-		if (back_track.top().first < cur_pos.first && back_track.top().second == cur_pos.second)
+		if (back_track.top().first < current_position.first && back_track.top().second == current_position.second)
 		{
-			Drill(back_track, cur_pos);
+			Drill(back_track, current_position);
 		}
 //            Gör en väg väster
-		if (back_track.top().first == cur_pos.first && back_track.top().second < cur_pos.second)
+		if (back_track.top().first == current_position.first && back_track.top().second < current_position.second)
 		{
-			Drill(back_track, cur_pos);
+			Drill(back_track, current_position);
 		}
-
-		
 
 	}
 		// sätt målgången
