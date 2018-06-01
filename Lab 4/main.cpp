@@ -12,13 +12,18 @@
 int main(int argc, char** argv) {
     std::string input = "";
     std::string filename ="";
-    for(int i = 0; i <1000000; i++)
+    clock_t start = clock();
+    for(int i = 0; i <2; i++)
     {
-        labyrinth level(21, 21);
+        labyrinth level(27, 27);
         level.Generate();
-        level.Solve_Maze();
-        level.print_perfect();
+        level.print();
+        
     }
+    clock_t stop = clock();
+    double elapsed = (double)(stop - start) / CLOCKS_PER_SEC;
+    printf("Time it took to complete lab4 sec: %f", elapsed);
+    std::cout << std::endl;
     return 0;
     
     

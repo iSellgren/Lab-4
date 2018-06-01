@@ -168,7 +168,7 @@ bool labyrinth::import_maze(std::string(a))
 }
 void labyrinth::Generate()
 {
-        clock_t start = clock();
+        //clock_t start = clock();
 	//    Sätter allt till Walls för att sedan kunna bygga mazen
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
@@ -315,14 +315,14 @@ void labyrinth::Generate()
 	}
 
     
-    clock_t stop = clock();
+    /*clock_t stop = clock();
     double elapsed = (double)(stop - start) / CLOCKS_PER_SEC;
     printf("Time it took to build maze in sec: %f", elapsed);
-    std::cout << std::endl;
+    std::cout << std::endl; */
 }
 void labyrinth::Solve_Maze()
 {
-   clock_t start = clock();
+   //clock_t start = clock();
 	
 	std::stack<std::pair<int, int>> solve_track;
 	solve_track.push(std::make_pair(1, 1));
@@ -357,7 +357,7 @@ void labyrinth::Solve_Maze()
 		if (solve_track.top().second < maze.size() && maze[east.first][east.second].display == Block::F)
 		{
 			maze[east.first][east.second - 1].display = Block::START;
-		        std::cout << "DONE"<< std::endl;
+		        //std::cout << "DONE"<< std::endl;
 		        break;
 		}
 
@@ -429,9 +429,9 @@ void labyrinth::Solve_Maze()
 			Solve(solve_track, solve_pos);
 			solve_pos.push(std::make_pair(solve_track.top().first, solve_track.top().second));
 	}
-    clock_t stop = clock();
+   /* clock_t stop = clock();
     double elapsed = (double)(stop - start) / CLOCKS_PER_SEC;
     printf("Time it took to complete the maze in sec: %f", elapsed);
-    std::cout << std::endl;
+    std::cout << std::endl;*/
 
 }
